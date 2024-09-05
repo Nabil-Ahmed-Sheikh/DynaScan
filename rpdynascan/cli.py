@@ -66,12 +66,39 @@ def scan_sql_injection(
     """Scan for sql injection vulnarability of an URL"""
     scanner = get_dynascanner()
     parsed_params = json.loads(params)
-    vulnerability = scanner.scan_sql_injection(url, parsed_params)
+    log = scanner.scan_sql_injection(url, parsed_params)
 
-    typer.secho(
-        f"""Vulnerability detected: {vulnerability}""",
-        fg=typer.colors.RED,
-    )
+    if log.report["found_issue"] == "Y":
+        typer.secho(
+            f"""Vulnerability detected: {log}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def scan_broken_authentication(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for sql injection vulnarability of an URL"""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_broken_authentication(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
 
 def _version_callback(value: bool) -> None:
     if value:
