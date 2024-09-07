@@ -100,6 +100,191 @@ def scan_broken_authentication(
             fg=typer.colors.GREEN,
         )
 
+@app.command()
+def scan_insecure_deserialization(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for insecure deserialization vulnerability of an URL."""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_insecure_deserialization(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def scan_open_ports(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for open ports vulnerability of an URL."""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_open_ports(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def scan_security_misconfigurations(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for security misconfigurations vulnerability of an URL."""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_security_misconfigurations(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def scan_for_improper_logging(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for improper logging vulnerability of an URL."""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_for_improper_logging(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def scan_for_ria_policy_files(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for ria policy files vulnerability of an URL."""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_for_ria_policy_files(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def scan_sensitive_data_exposure(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for sensitive data exposure vulnerability of an URL."""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_sensitive_data_exposure(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def scan_xss(
+    url: str = typer.Argument(...),
+    params = typer.Argument(...),
+) -> None:
+    """Scan for xss vulnerability of an URL."""
+    scanner = get_dynascanner()
+    parsed_params = json.loads(params)
+    vulnerability = scanner.scan_xss(url, parsed_params)
+
+    if len(vulnerability) > 0:
+        typer.secho(
+            f"""Vulnerability detected: {vulnerability}""",
+            fg=typer.colors.RED,
+        )
+    else:
+        typer.secho(
+            f"""Vulnerability not found""",
+            fg=typer.colors.GREEN,
+        )
+
+@app.command()
+def report() -> None:
+    """View Report."""
+    scanner = get_dynascanner()
+    vulnerability_list = scanner.get_report()
+    if len(vulnerability_list) == 0:
+        typer.secho(
+            "There are no vulnerability to report yet", fg=typer.colors.BRIGHT_YELLOW
+        )
+        raise typer.Exit()
+    typer.secho("\nVulnerability list:\n", fg=typer.colors.BLUE, bold=True)
+    columns = (
+        "ID.  ",
+        "| URL  ",
+        "| Type  ",
+        "| Found Issue  ",
+        "| Description  ",
+        "| Time  ",
+        "| Used Params  ",
+    )
+    headers = "".join(columns)
+    typer.secho(headers, fg=typer.colors.BLUE, bold=True)
+    typer.secho("-" * len(headers), fg=typer.colors.BLUE)
+    print(vulnerability_list)
+    for id, vulnerability in enumerate(vulnerability_list, 1):
+        id, type, time, found_issue, vulnerabilities, url, paramas = vulnerability.values()
+        typer.secho(
+            f"{id}{(len(columns[0]) - len(str(id))) * ' '}"
+            f"| ({url}){(len(columns[1]) - len(str(url)) - 4) * ' '}"
+            f"| {type}{(len(columns[2]) - len(str(type)) - 2) * ' '}"
+            f"| {time}{(len(columns[2]) - len(str(time)) - 2) * ' '}"
+            f"| {found_issue}{(len(columns[2]) - len(str(found_issue)) - 2) * ' '}"
+            f"| {paramas}{(len(columns[2]) - len(str(paramas)) - 2) * ' '}"
+            f"| {vulnerabilities}",
+            fg=typer.colors.BLUE,
+        )
+    typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE)
+
 def _version_callback(value: bool) -> None:
     if value:
         typer.echo(f"{__app_name__} v{__version__}")
