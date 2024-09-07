@@ -63,7 +63,7 @@ def scan_sql_injection(
     url: str = typer.Argument(...),
     params = typer.Argument(...),
 ) -> None:
-    """Scan for sql injection vulnarability of an URL"""
+    """Scan for sql injection vulnerability of an URL"""
     scanner = get_dynascanner()
     parsed_params = json.loads(params)
     log = scanner.scan_sql_injection(url, parsed_params)
@@ -82,14 +82,15 @@ def scan_sql_injection(
 @app.command()
 def scan_broken_authentication(
     url: str = typer.Argument(...),
-    params = typer.Argument(...),
+    params = typer.Option(...,  "--params", "-p"),
 ) -> None:
-    """Scan for sql injection vulnarability of an URL"""
+    """Scan for broken authentication vulnerability of an URL"""
     scanner = get_dynascanner()
     parsed_params = json.loads(params)
     vulnerability = scanner.scan_broken_authentication(url, parsed_params)
 
-    if len(vulnerability) > 0:
+
+    if vulnerability["found_issue"] == "Y":
         typer.secho(
             f"""Vulnerability detected: {vulnerability}""",
             fg=typer.colors.RED,
@@ -260,28 +261,28 @@ def report() -> None:
     typer.secho("\nVulnerability list:\n", fg=typer.colors.BLUE, bold=True)
     columns = (
         "ID.  ",
-        "| URL  ",
+        "| URL ",
         "| Type  ",
-        "| Found Issue  ",
         "| Description  ",
+        "| Vulnarable  ",
+        "| Params  ",
         "| Time  ",
-        "| Used Params  ",
+        
     )
     headers = "".join(columns)
     typer.secho(headers, fg=typer.colors.BLUE, bold=True)
     typer.secho("-" * len(headers), fg=typer.colors.BLUE)
-    print(vulnerability_list)
-    for id, vulnerability in enumerate(vulnerability_list, 1):
-        id, type, time, found_issue, vulnerabilities, url, paramas = vulnerability.values()
+    for _, vulnerability in enumerate(vulnerability_list, 1):
+        id, url, params, type, vulnerabilities, found_issue, time = vulnerability.values()
         typer.secho(
             f"{id}{(len(columns[0]) - len(str(id))) * ' '}"
-            f"| ({url}){(len(columns[1]) - len(str(url)) - 4) * ' '}"
-            f"| {type}{(len(columns[2]) - len(str(type)) - 2) * ' '}"
-            f"| {time}{(len(columns[2]) - len(str(time)) - 2) * ' '}"
-            f"| {found_issue}{(len(columns[2]) - len(str(found_issue)) - 2) * ' '}"
-            f"| {paramas}{(len(columns[2]) - len(str(paramas)) - 2) * ' '}"
+            f"| ({url}){(len(columns[1]) - len(str(url))) * ' '}"
+            f"| {type}{(len(columns[1]) - len(str(type))) * ' '}"
+            f"| {time}{(len(columns[1]) - len(str(time))) * ' '}"
+            f"| {found_issue}{(len(columns[1]) - len(str(found_issue))) * ' '}"
+            f"| {params}{(len(columns[1]) - len(str(params))) * ' '}"
             f"| {vulnerabilities}",
-            fg=typer.colors.BLUE,
+            fg=typer.colors.CYAN,
         )
     typer.secho("-" * len(headers) + "\n", fg=typer.colors.BLUE)
 

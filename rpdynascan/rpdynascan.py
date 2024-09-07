@@ -41,7 +41,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
 
     def scan_broken_authentication(self, url: str, params: Dict) -> Log:
         """Scan for broken authentication vulnerability of an URL."""
@@ -61,7 +61,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def scan_insecure_deserialization(self, url: str, params: Dict) -> Log:
         """Scan for insecure deserialization vulnerability of an URL."""
@@ -81,7 +81,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def scan_open_ports(self, url: str, params: Dict) -> Log:
         """Scan for open ports vulnerability of an URL."""
@@ -101,7 +101,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def scan_security_misconfigurations(self, url: str, params: Dict) -> Log:
         """Scan for security misconfigurations vulnerability of an URL."""
@@ -121,7 +121,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def scan_for_improper_logging(self, url: str, params: Dict) -> Log:
         """Scan for improper logging vulnerability of an URL."""
@@ -141,7 +141,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def scan_for_ria_policy_files(self, url: str, params: Dict) -> Log:
         """Scan for ria policy files vulnerability of an URL."""
@@ -161,7 +161,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def scan_sensitive_data_exposure(self, url: str, params: Dict) -> Log:
         """Scan for sensitive data exposure vulnerability of an URL."""
@@ -181,7 +181,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def scan_xss(self, url: str, params: Dict) -> Log:
         """Scan for xss vulnerability of an URL."""
@@ -203,7 +203,7 @@ class Dynascanner:
             return Log(report, read.error)
         read.vulnerable_list.append(report)
         write = self._db_handler.write_report(read.vulnerable_list)
-        return Log(report, write.error)
+        return report
     
     def get_report(self) -> List[Dict[str, Any]]:
         """Return the full report history."""
